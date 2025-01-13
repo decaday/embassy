@@ -68,7 +68,7 @@ impl<T: Instance> super::SealedAdcChannel<T> for Vbat {
 // NOTE (unused): The prescaler enum closely copies the hardware capabilities,
 // but high prescaling doesn't make a lot of sense in the current implementation and is ommited.
 #[allow(unused)]
-enum Prescaler {
+pub enum Prescaler {
     NotDivided,
     DividedBy2,
     DividedBy4,
@@ -136,10 +136,14 @@ impl Prescaler {
 impl<'d, T: Instance> Adc<'d, T> {
     /// Create a new ADC driver.
     pub fn new(adc: impl Peripheral<P = T> + 'd) -> Self {
+        let prescaler = Prescaler::from_ker_ck(T::frequency());
+        Self::new_with_prescaler(adc, prescaler)
+    }
+
+    /// Create a new ADC driver.
+    pub fn new_with_prescaler(adc: impl Peripheral<P = T> + 'd, prescaler: Prescaler) -> Self {
         embassy_hal_internal::into_ref!(adc);
         rcc::enable_and_reset::<T>();
-
-        let prescaler = Prescaler::from_ker_ck(T::frequency());
 
         T::common_regs().ccr().modify(|w| w.set_presc(prescaler.presc()));
 
