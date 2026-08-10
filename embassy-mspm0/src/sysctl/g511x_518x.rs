@@ -66,7 +66,7 @@ impl ClkOutSource {
             ClkOutSource::Hfclk(_) => vals::Exclksrc::HFCLK,
             ClkOutSource::SysPllClk1(_) => vals::Exclksrc::SYSPLLOUT1,
             // FIXME: Update SVD to define _RESERVED_6 as USBFLL
-            ClkOutSource::UsbFll(_) => vals::Exclksrc::_RESERVED_6,
+            ClkOutSource::UsbFll(_) => vals::Exclksrc::USBFLL,
         }
     }
 }

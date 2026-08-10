@@ -77,6 +77,8 @@ pub(crate) use mspm0_metapac as pac;
 
 pub use crate::_generated::interrupt;
 
+pub mod usb;
+
 /// Macro to bind interrupts to handlers.
 ///
 /// This defines the right interrupt handlers, and creates a unit struct (like `struct Irqs;`)
@@ -349,7 +351,7 @@ pub fn read_reset_cause() -> Result<ResetCause, u8> {
         Id::SYSBSLENTRY => Ok(SysrstBslEntry),
         #[cfg(any(mspm0g110x, mspm0g150x, mspm0g151x, mspm0g310x, mspm0g350x, mspm0g351x, mspm0g518x))]
         Id::SYSWWDT1 => Ok(SysrstWwdt1Violation),
-        #[cfg(not(any(mspm0c110x, mspm0c1105_c1106, mspm0g351x, mspm0g151x)))]
+        #[cfg(not(any(mspm0c110x, mspm0c1105_c1106, mspm0g351x, mspm0g151x, mspm0g518x)))]
         Id::SYSFLASHECC => Ok(SysrstFlashEccError),
         Id::SYSCPULOCK => Ok(SysrstCpuLockupViolation),
         Id::SYSDBG => Ok(SysrstDebugTriggered),
