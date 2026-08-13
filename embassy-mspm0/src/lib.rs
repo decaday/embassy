@@ -34,6 +34,8 @@ pub mod trng;
 #[cfg(not(unicomm))]
 pub mod uart;
 pub mod wwdt;
+#[cfg(feature = "usb")]
+pub mod usb;
 
 /// Operating modes for peripherals.
 pub mod mode {
