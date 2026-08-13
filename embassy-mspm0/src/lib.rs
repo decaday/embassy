@@ -167,6 +167,14 @@ pub struct Config {
     ///
     /// If [`true`], after a channel finishes a transfer it becomes the lowest priority.
     pub dma_round_robin: bool,
+
+    /// USB clock source
+    ///
+    /// Configures and starts the USBCLK before the USB peripheral is powered.
+    /// Defaults to USBFLL with SOF reference, which is suitable for USB Device
+    /// mode and requires no external crystal.
+    #[cfg(mspm0g518x)]
+    pub usb_clk: sysctl::UsbClkSource,
 }
 
 impl Default for Config {
@@ -174,6 +182,8 @@ impl Default for Config {
         Self {
             dma_burst_size: dma::BurstSize::Complete,
             dma_round_robin: false,
+            #[cfg(mspm0g518x)]
+            usb_clk: sysctl::UsbClkSource::default(),
         }
     }
 }
@@ -208,6 +218,10 @@ pub fn init(config: Config) -> Peripherals {
         gpio::init(pac::GPIOB);
         #[cfg(gpio_pc)]
         gpio::init(pac::GPIOC);
+
+        // Configure USB clock source.
+        #[cfg(mspm0g518x)]
+        sysctl::configure_usb_clk(config.usb_clk);
 
         _generated::enable_group_interrupts(cs);
 
@@ -338,7 +352,6 @@ pub fn read_reset_cause() -> Result<ResetCause, u8> {
             mspm0g310x,
             mspm0g350x,
             mspm0g351x,
-            mspm0g518x,
         )))]
         Id::Bootnonpmuparity => Ok(BootrstNonPmuParityFault),
         Id::Bootclkfail => Ok(BootrstClockFault),

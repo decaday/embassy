@@ -22,6 +22,10 @@ use crate::{Peri, pac};
 mod inner;
 
 pub use inner::ClkOutSource;
+#[cfg(mspm0g518x)]
+pub use inner::{UsbClkSource, UsbFllRef};
+#[cfg(mspm0g518x)]
+pub(crate) use inner::configure_usb_clk;
 
 /// Deep-sleep idle modes, ordered by increasing power saving.
 ///
